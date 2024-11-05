@@ -56,7 +56,13 @@ def update_task(task_id):
     
     return {"task": task.to_dict()}, 200
 
+@tasks_bp.delete("/<task_id>")
+def delete_task(task_id):
+    task = validate_model(Task, task_id)
 
-
+    db.session.delete(task)
+    db.session.commit()
+    
+    return {"details": f"Task {task.id} \"{task.title}\" successfully deleted"}, 200
 
 
