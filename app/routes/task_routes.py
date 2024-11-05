@@ -2,6 +2,7 @@ from flask import Blueprint, abort, make_response, request, Response
 from app.models.task import Task
 from ..db import db
 from app.routes.routes_utilities import validate_model
+from sqlalchemy import asc, desc
 
 tasks_bp = Blueprint("tasks_bp", __name__, url_prefix="/tasks")
 
@@ -14,7 +15,7 @@ def create_task():
     except KeyError as error:
         response_body = {"details": "Invalid data"}
         abort(make_response(response_body, 400))
-        
+
     db.session.add(new_task)
     db.session.commit()
 
@@ -34,7 +35,13 @@ def get_all_tasks():
     if description_param:
         query = db.select(Task).where(Task.description.like(f"%{description_param}%"))
     
-    query = query.order_by(Task.id)
+    sort_params = request.args.get("sort")
+    if sort_params == 'asc':
+        query = db.select(Task).order_by(asc(Task.title))
+    elif sort_params == 'desc':
+        query = db.select(Task).order_by(desc(Task.title))
+    else:
+        query = query.select(Task).order_by(Task.id)
 
     tasks = db.session.scalars(query)
 
