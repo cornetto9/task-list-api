@@ -8,8 +8,13 @@ tasks_bp = Blueprint("tasks_bp", __name__, url_prefix="/tasks")
 @tasks_bp.post("")
 def create_task():
     request_body = request.get_json()
-    new_task = Task.from_dict(request_body)
     
+    try:
+        new_task = Task.from_dict(request_body)
+    except KeyError as error:
+        response_body = {"details": "Invalid data"}
+        abort(make_response(response_body, 400))
+        
     db.session.add(new_task)
     db.session.commit()
 
