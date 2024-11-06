@@ -4,6 +4,8 @@ from ..db import db
 from app.routes.routes_utilities import validate_model
 from sqlalchemy import asc, desc
 from datetime import datetime
+import requests
+import os
 
 tasks_bp = Blueprint("tasks_bp", __name__, url_prefix="/tasks")
 
@@ -85,7 +87,19 @@ def mark_task_complete(task_id):
         task.is_complete = True
         db.session.commit()
 
-    return {"task": task.to_dict()}, 200
+    URL = "https://slack.com/api/chat.postMessage"
+    token = os.environ.get('api_token')
+    if not token:
+        return {"error": "Slack API token not found"}, 500
+    
+    header = {"Authorization": f"Bearer {token}"}
+    json_payload = {
+        "channel": "C080163FK25",
+        "text": f"Someone just completed the task {task.title}"
+    }
+    response = requests.post(URL, json=json_payload, headers=header)
+    if response:
+       return {"task": task.to_dict()}, 200
 
 @tasks_bp.patch("/<task_id>/mark_incomplete")
 def mark_task_incomplete(task_id):
