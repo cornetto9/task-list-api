@@ -7,7 +7,7 @@ class Task(db.Model):
     title: Mapped[str] = mapped_column(String, nullable=False)
     description: Mapped[str] = mapped_column(String, nullable=False)
     completed_at: Mapped[datetime] = mapped_column(nullable=True)
-    is_complete: Mapped[bool] = mapped_column(nullable=True, default=False)
+    is_complete: Mapped[bool] = mapped_column(nullable=True,default=False)
 
     def to_dict(self):
         return {

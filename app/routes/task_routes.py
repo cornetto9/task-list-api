@@ -82,10 +82,9 @@ def delete_task(task_id):
 def mark_task_complete(task_id):
     task = validate_model(Task, task_id)
 
-    if task.completed_at or not task.completed_at:
-        task.completed_at = datetime.utcnow()
-        task.is_complete = True
-        db.session.commit()
+    task.completed_at = datetime.utcnow()
+    task.is_complete = True
+    db.session.commit()
 
     URL = "https://slack.com/api/chat.postMessage"
     token = os.environ.get('api_token')
@@ -93,11 +92,11 @@ def mark_task_complete(task_id):
         return {"error": "Slack API token not found"}, 500
     
     header = {"Authorization": f"Bearer {token}"}
-    json_payload = {
+    response_body = {
         "channel": "C080163FK25",
         "text": f"Someone just completed the task {task.title}"
     }
-    response = requests.post(URL, json=json_payload, headers=header)
+    response = requests.post(URL, json=response_body, headers=header)
     if response:
        return {"task": task.to_dict()}, 200
 
@@ -105,9 +104,8 @@ def mark_task_complete(task_id):
 def mark_task_incomplete(task_id):
     task = validate_model(Task, task_id)
 
-    if task.completed_at or not task.completed_at:
-        task.completed_at = None
-        task.is_complete = False
-        db.session.commit()
+    task.completed_at = None
+    task.is_complete = False
+    db.session.commit()
 
     return {"task": task.to_dict()}, 200
