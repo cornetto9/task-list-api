@@ -1,17 +1,22 @@
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import String, ForeignKey
 from ..db import db
 from datetime import datetime
+from typing import Optional
+
 class Task(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     title: Mapped[str] = mapped_column(String, nullable=False)
     description: Mapped[str] = mapped_column(String, nullable=False)
     completed_at: Mapped[datetime] = mapped_column(nullable=True)
     is_complete: Mapped[bool] = mapped_column(nullable=True,default=False)
+    goal_id: Mapped[Optional[int]] = mapped_column(ForeignKey("goal.id"))
+    goal: Mapped[Optional["Goal"]] = relationship(back_populates="tasks")
 
     def to_dict(self):
         return {
             "id" : self.id,
+            "goal_id": self.goal_id,
             "title" : self.title,
             "description" : self.description,
             "is_complete" : self.is_complete

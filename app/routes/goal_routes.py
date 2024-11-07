@@ -1,5 +1,6 @@
 from flask import Blueprint, abort, make_response, request, Response
 from app.models.goal import Goal
+from app.models.task import Task
 from ..db import db
 from app.routes.routes_utilities import validate_model
 from sqlalchemy import asc, desc
@@ -60,4 +61,39 @@ def delete_goal(goal_id):
     db.session.commit()
 
     return {"details": f"Goal {goal.id} \"{goal.title}\" successfully deleted"}, 200
+
+@goals_bp.post("/<goal_id>/tasks")
+def create_task_with_goal_id(goal_id):
+    goal = validate_model(Goal, goal_id)
+
+    request_body = request.get_json()
+    task_ids = request_body.get("task_ids")
+
+    if not task_ids:
+        return {"msg": "{task_ids} not provided"}, 400
+
+    tasks = Task.query.filter(Task.id.in_(task_ids)).all()
+
+    for task in tasks:
+        task.goal_id = goal.id
+    
+    db.session.commit()
+
+    return {
+        "id": goal.id,
+        "task_ids": task_ids
+    }
+
+@goals_bp.get("/<goal_id>/tasks")
+def get_tasks_by_goal(goal_id):
+    goal = validate_model(Goal, goal_id)
+
+    tasks = [task.to_dict() for task in goal.tasks]
+    
+    return {
+        "id": goal.id,
+        "title": goal.title,
+        "tasks": tasks
+    }, 200 
+
 
