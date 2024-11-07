@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import String, Integer
+from sqlalchemy import String
 from ..db import db
 from datetime import datetime
 class Task(db.Model):
