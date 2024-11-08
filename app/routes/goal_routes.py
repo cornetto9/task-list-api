@@ -3,10 +3,8 @@ from app.models.goal import Goal
 from app.models.task import Task
 from ..db import db
 from app.routes.routes_utilities import validate_model
-from sqlalchemy import asc, desc
-from datetime import datetime
-import requests
-import os
+
+
 
 goals_bp = Blueprint("goals_bp", __name__, url_prefix="/goals")
 
