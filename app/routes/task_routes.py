@@ -35,11 +35,11 @@ def get_all_tasks():
 
     title_params = request.args.get("title")
     if title_params:
-        query = db.select(Task).where(Task.title == title_params)
+        query = query.where(Task.title == title_params)
     
     description_param = request.args.get("description")
     if description_param:
-        query = db.select(Task).where(Task.description.like(f"%{description_param}%"))
+        query = query.where(Task.description.like(f"%{description_param}%"))
     
     sort_params = request.args.get("sort")
     if sort_params == 'asc':
