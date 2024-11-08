@@ -94,8 +94,6 @@ def mark_task_complete(task_id):
     URL = "https://slack.com/api/chat.postMessage"
     
     API_TOKEN = os.getenv('API_TOKEN')
-    if not API_TOKEN:
-        return {"error": "Slack API token not found"}, 500
     
     header = {"Authorization": f"Bearer {API_TOKEN}"}
     response_body = {
