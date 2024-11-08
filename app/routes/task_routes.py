@@ -90,11 +90,11 @@ def mark_task_complete(task_id):
 
     URL = "https://slack.com/api/chat.postMessage"
     
-    token = os.environ.get('API_TOKEN')
-    if not token:
+    API_TOKEN = os.environ.get('API_TOKEN')
+    if not API_TOKEN:
         return {"error": "Slack API token not found"}, 500
     
-    header = {"Authorization": f"Bearer {token}"}
+    header = {"Authorization": f"Bearer {API_TOKEN}"}
     response_body = {
         "channel": "C080163FK25",
         "text": f"Someone just completed the task {task.title}"
