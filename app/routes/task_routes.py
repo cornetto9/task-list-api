@@ -6,6 +6,7 @@ from sqlalchemy import asc, desc
 from datetime import datetime
 import requests
 import os
+from dotenv import load_dotenv
 
 tasks_bp = Blueprint("tasks_bp", __name__, url_prefix="/tasks")
 
@@ -90,7 +91,7 @@ def mark_task_complete(task_id):
 
     URL = "https://slack.com/api/chat.postMessage"
     
-    API_TOKEN = os.environ.get('API_TOKEN')
+    API_TOKEN = os.getenv('API_TOKEN')
     if not API_TOKEN:
         return {"error": "Slack API token not found"}, 500
     
