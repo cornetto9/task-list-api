@@ -8,6 +8,8 @@ import requests
 import os
 from dotenv import load_dotenv
 
+load_dotenv()
+
 tasks_bp = Blueprint("tasks_bp", __name__, url_prefix="/tasks")
 
 @tasks_bp.post("")
