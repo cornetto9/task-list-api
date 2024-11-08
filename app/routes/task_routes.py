@@ -55,7 +55,9 @@ def get_all_tasks():
 @tasks_bp.get("/<task_id>")
 def get_one_task(task_id):
     task = validate_model(Task, task_id)
+
     return {"task": task.to_dict()}, 200
+
 
 @tasks_bp.put("/<task_id>")
 def update_task(task_id):
@@ -109,3 +111,5 @@ def mark_task_incomplete(task_id):
     db.session.commit()
 
     return {"task": task.to_dict()}, 200
+
+

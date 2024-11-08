@@ -88,12 +88,12 @@ def create_task_with_goal_id(goal_id):
 def get_tasks_by_goal(goal_id):
     goal = validate_model(Goal, goal_id)
 
-    tasks = [task.to_dict() for task in goal.tasks]
-    
-    return {
+    response = {
         "id": goal.id,
         "title": goal.title,
-        "tasks": tasks
-    }, 200 
+        "tasks": [task.to_dict() for task in goal.tasks]
+    }
 
-
+    return response, 200
+    
+    

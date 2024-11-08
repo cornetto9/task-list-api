@@ -11,7 +11,6 @@ class Goal(db.Model):
         return {
             "id": self.id,
             "title": self.title,
-            "tasks": self.tasks
         }
     
     @classmethod
